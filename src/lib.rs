@@ -28,7 +28,10 @@ mod imp {
     }
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(any(
+    target_os = "linux",
+    target_os = "macos"
+))]
 mod imp {
     use libc;
     use std::ffi::CString;
