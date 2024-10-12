@@ -63,7 +63,7 @@ mod imp {
             .arg("setinfo")
             .arg(pid.to_string())
             .arg("--name")
-            .arg(name).exec()
+            .arg(title).exec()
     }
 }
 
