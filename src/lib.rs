@@ -55,20 +55,14 @@ mod imp {
 
 #[cfg(target_os = "macos")]
 mod imp {
-    use libc;
-    use std::ffi::CString;
-    use std::ffi::OsStr;
-    use std::os::unix::ffi::OsStrExt;
+    pub fn set_title(title: &str) {
+        let pid = std::process::id();
 
-    /// Set a process title, or some approximation of it, if possible.
-    pub fn set_title<T: AsRef<OsStr>>(title: T) {
-        if let Ok(title) = CString::new(title.as_ref().to_owned().as_bytes()) {
-            let title_ptr = c_title.as_ptr() as *mut c_char;
-            unsafe {
-                let argv = std::ptr::null_mut();
-                libc::strcpy(libc::argv[0], title_ptr);
-            };
-        }
+        let _ = std::process::Command::new("/usr/bin/lsappinfo")
+            .arg("setinfo")
+            .arg(pid.to_string())
+            .arg("--name")
+            .arg(name).execute()
     }
 }
 
