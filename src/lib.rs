@@ -28,10 +28,7 @@ mod imp {
     }
 }
 
-#[cfg(any(
-    target_os = "linux",
-    target_os = "macos"
-))]
+#[cfg(target_os = "linux")]
 mod imp {
     use libc;
     use std::ffi::CString;
@@ -53,6 +50,25 @@ mod imp {
         let mut buf = [0u8; 16];
         unsafe { libc::prctl(libc::PR_GET_NAME, buf.as_mut_ptr(), 0, 0, 0) };
         assert_eq!(&buf, b"abcdefghijklmno\0");
+    }
+}
+
+#[cfg(target_os = "macos")]
+mod imp {
+    use libc;
+    use std::ffi::CString;
+    use std::ffi::OsStr;
+    use std::os::unix::ffi::OsStrExt;
+
+    /// Set a process title, or some approximation of it, if possible.
+    pub fn set_title<T: AsRef<OsStr>>(title: T) {
+        if let Ok(title) = CString::new(title.as_ref().to_owned().as_bytes()) {
+            let title_ptr = c_title.as_ptr() as *mut c_char;
+            unsafe {
+                let argv = std::ptr::null_mut();
+                libc::strcpy(libc::argv[0], title_ptr);
+            };
+        }
     }
 }
 
