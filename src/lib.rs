@@ -55,6 +55,7 @@ mod imp {
 
 #[cfg(target_os = "macos")]
 mod imp {
+    use std::os::unix::process::CommandExt;
     pub fn set_title(title: &str) {
         let pid = std::process::id();
 
